@@ -73,11 +73,37 @@ public class DataAnalyzer {
     }
 
     public Map<String, Integer> analyzeMostBoughtCategory(List<Review> reviews) {
-        Map<String, Integer> BoughtCategory = new HashMap<>();
+        Map<String, Integer> boughtCategory = new HashMap<>();
         for (Review review : reviews) {
-            BoughtCategory.put(review.getCategories(), BoughtCategory.getOrDefault(review.getCategories(), 0)+1);
+            boughtCategory.put(review.getCategories(), boughtCategory.getOrDefault(review.getCategories(), 0)+1);
         }
-        return BoughtCategory;
+        return boughtCategory;
+    }
+
+    public Map<String, Float> analyzeProductWiseAnalysedReviews(List<Review> reviews, Map<String, Integer> productBoughtFrequency) {
+        Map<String, Float> productWiseAnalysedReviews = new HashMap<>();
+        for (Review review : reviews) {
+            productWiseAnalysedReviews.put(review.getProduct(), productWiseAnalysedReviews.getOrDefault(review.getProduct(),0f )+ ((Integer)review.getDerivedField("reviewRank")).floatValue());
+        }
+
+        for(Map.Entry<String, Float> entry : productWiseAnalysedReviews.entrySet()) {
+            productWiseAnalysedReviews.put(entry.getKey(),entry.getValue() / productBoughtFrequency.get(entry.getKey()));
+        }
+
+        return productWiseAnalysedReviews;
+    }
+
+    public Map<String, Float> analyzeProductWiseReviews(List<Review> reviews, Map<String, Integer> productBoughtFrequency) {
+        Map<String, Float> productWiseAnalysedReviews = new HashMap<>();
+        for (Review review : reviews) {
+            productWiseAnalysedReviews.put(review.getProduct(), productWiseAnalysedReviews.getOrDefault(review.getProduct(),0f )+ ((Short)review.getRating()).floatValue());
+        }
+
+        for(Map.Entry<String, Float> entry : productWiseAnalysedReviews.entrySet()) {
+            productWiseAnalysedReviews.put(entry.getKey(),entry.getValue() / productBoughtFrequency.get(entry.getKey()));
+        }
+
+        return productWiseAnalysedReviews;
     }
 
 }

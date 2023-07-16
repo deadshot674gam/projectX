@@ -24,6 +24,10 @@ public class Review {
         return derivedFields;
     }
 
+    public  Object getDerivedField(String field) {
+        return derivedFields.get(field);
+    }
+
     public void setDerivedFields(String field, Object value) {
         this.derivedFields.put(field, value);
     }

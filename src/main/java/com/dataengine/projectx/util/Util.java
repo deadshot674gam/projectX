@@ -77,7 +77,7 @@ public class Util {
     /**
      * 
      * @param format - Datetime format
-     * @param value - Datetime as String
+     * @param value  - Datetime as String
      * @param locale - Local Constant
      * @return true if format matches
      */
@@ -130,9 +130,10 @@ public class Util {
 
     /**
      * 
-     * @param format Datetime format , should be correct format
+     * @param format     Datetime format , should be correct format
      * @param dateString Datetime as String
-     * @return Date Object from String , if String is NOW / Empty then Current DATETIME
+     * @return Date Object from String , if String is NOW / Empty then Current
+     *         DATETIME
      * @throws ParseException if format is incorrect
      */
     public static Date getDateTimeFromString(String format, String dateString) throws ParseException {
@@ -148,7 +149,8 @@ public class Util {
     /**
      * 
      * @param data - Any data
-     * @return Removes Redundant duplicate from product name ( such as same name added twice in new lines)
+     * @return Removes Redundant duplicate from product name ( such as same name
+     *         added twice in new lines)
      */
     public static String sanitizeDuplicates(String data) {
         if (data.isEmpty() || !data.contains("\n")) {
@@ -165,11 +167,10 @@ public class Util {
         return data;
     }
 
-
     /**
      * 
      * @param map hashMap to sort
-     * @param asc true is asc order 
+     * @param asc true is asc order
      * @return List of Map Entry in mentioned order
      */
     public static List<Entry<String, Integer>> sortHashMap(Map<String, Integer> map, boolean asc) {
@@ -186,10 +187,48 @@ public class Util {
 
     /**
      * 
+     * @param map hashMap to sort
+     * @param asc true is asc order
+     * @return List of Map Entry in mentioned order
+     */
+    public static List<Entry<String, Float>> sortHashMapFloat(Map<String, Float> map, boolean asc) {
+        List<Entry<String, Float>> entries = new ArrayList<>(map.entrySet());
+        if (asc) {
+            entries.sort(Entry.<String, Float>comparingByValue());
+        } else {
+            entries.sort(Entry.<String, Float>comparingByValue().reversed());
+
+        }
+
+        return entries;
+    }
+
+    /**
+     * 
      * @param fileName output filename
-     * @param entries List of Map Entry 
+     * @param entries  List of Map Entry
      */
     public static void writeEntriesToJSON(String fileName, List<Entry<String, Integer>> entries) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json;
+        try {
+            json = objectMapper.writeValueAsString(entries);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        try (FileWriter fileWriter = new FileWriter(fileName)) {
+            fileWriter.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     * @param entries List of Map Entry
+     */
+    public static void writeFloatEntriesToJSON(String fileName, List<Entry<String, Float>> entries) {
         ObjectMapper objectMapper = new ObjectMapper();
         String json;
         try {
